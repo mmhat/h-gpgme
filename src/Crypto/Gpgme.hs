@@ -52,6 +52,7 @@ module Crypto.Gpgme (
     , getKey
     , listKeys
     , removeKey
+    , searchKeys
     -- * Information about keys
     , Validity (..)
     , PubKeyAlgo (..)

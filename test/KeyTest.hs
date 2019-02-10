@@ -22,6 +22,7 @@ tests = [ testCase "get_alice_pub_from_alice" get_alice_pub_from_alice
         , testCase "get_bob_pub_from_alice" get_bob_pub_from_alice
         , testCase "alice_list_pub_keys" alice_list_pub_keys
         , testCase "alice_list_secret_keys" alice_list_secret_keys
+        , testCase "alice_search_pub_keys" alice_search_pub_keys
         , testCase "get_inexistent_from_alice" get_inexistent_pub_from_alice
         , testCase "check_alice_pub_user_ids" check_alice_pub_user_ids
         , testCase "check_alice_pub_subkeys" check_alice_pub_subkeys
@@ -54,6 +55,14 @@ alice_list_secret_keys = do
     withCtx "test/alice" "C" OpenPGP $ \ctx ->
         do keys <- listKeys ctx WithSecret
            length keys @?= 1
+
+alice_search_pub_keys :: Assertion
+alice_search_pub_keys = do
+    withCtx "test/alice" "C" OpenPGP $ \ctx ->
+        do keys <- searchKeys ctx NoSecret "alice@email.com"
+           length keys @?= 1
+           let keyIds = [["6B9809775CF91391","3BA69AA2EAACEB8A"]]
+           map (map subkeyKeyId . keySubKeys) keys @?= keyIds
 
 get_inexistent_pub_from_alice :: Assertion
 get_inexistent_pub_from_alice = do
